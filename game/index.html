@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SIGILBOUND — a duel of four sigils</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <header id="topbar">
+    <div class="brand">SIGIL<span>BOUND</span></div>
+    <div id="round-badge">ROUND <b id="round-num">1</b></div>
+    <div id="attuned-badge" class="attuned-none" title="Attuned sigil: cards of this sigil gain +2 power this round">ATTUNED <b id="attuned-sigil">—</b></div>
+    <div class="top-actions">
+      <button id="sound-toggle" type="button" aria-label="Toggle sound">SOUND ON</button>
+      <button id="new-duel-btn" type="button">NEW DUEL</button>
+    </div>
+  </header>
+
+  <main id="table-wrap">
+    <section id="table">
+      <div id="opponent-zone" class="duelist-zone">
+        <div class="duelist-head">
+          <div class="duelist-id">
+            <div class="portrait portrait-vex" aria-hidden="true">V</div>
+            <div>
+              <div class="duelist-name">VEX <span class="duelist-title">Warden of the Four Sigils</span></div>
+              <div class="duelist-sub">AI opponent · hand face-up — read it, counter it</div>
+            </div>
+          </div>
+          <div class="vitals">
+            <div class="life-row"><span class="vital-label">LIFE</span><div class="life-bar"><div id="ai-life-fill" class="life-fill" style="width:100%"></div><span id="ai-life-text" class="life-text">20 / 20</span></div></div>
+            <div class="energy-row"><span class="vital-label">ENERGY</span><span id="ai-energy-pips" class="pips"></span><span id="ai-energy-text" class="energy-text"></span></div>
+            <div class="deck-row"><span class="vital-label">DECK</span><span id="ai-deck-text">25 cards</span></div>
+          </div>
+        </div>
+        <div id="ai-hand" class="hand hand-mini" aria-label="Vex's hand"></div>
+      </div>
+
+      <div id="arena">
+        <div id="arena-slots">
+          <div class="arena-side">
+            <div class="arena-label">VEX PLAYS</div>
+            <div id="ai-played" class="played-slot empty"><span class="slot-hint">waiting…</span></div>
+          </div>
+          <div id="versus">VS</div>
+          <div class="arena-side">
+            <div class="arena-label">YOU PLAY</div>
+            <div id="player-played" class="played-slot empty"><span class="slot-hint">pick a card below</span></div>
+          </div>
+        </div>
+        <div id="round-banner" class="round-banner" aria-live="polite">Choose a card. Vex is watching your hand too.</div>
+      </div>
+
+      <div id="player-zone" class="duelist-zone">
+        <div class="duelist-head">
+          <div class="duelist-id">
+            <div class="portrait portrait-you" aria-hidden="true">Y</div>
+            <div>
+              <div class="duelist-name">YOU <span class="duelist-title">the Sigilbound</span></div>
+              <div class="duelist-sub">Click a card to select it — click again (or Enter) to play it</div>
+            </div>
+          </div>
+          <div class="vitals">
+            <div class="life-row"><span class="vital-label">LIFE</span><div class="life-bar"><div id="player-life-fill" class="life-fill" style="width:100%"></div><span id="player-life-text" class="life-text">20 / 20</span></div></div>
+            <div class="energy-row"><span class="vital-label">ENERGY</span><span id="player-energy-pips" class="pips"></span><span id="player-energy-text" class="energy-text"></span></div>
+            <div class="deck-row"><span class="vital-label">DECK</span><span id="player-deck-text">25 cards</span></div>
+          </div>
+        </div>
+        <div id="player-hand" class="hand" aria-label="Your hand"></div>
+        <div id="hand-actions">
+          <button id="hold-btn" type="button" class="hidden">HOLD — no card affordable · draw 2</button>
+        </div>
+      </div>
+    </section>
+
+    <aside id="log-panel">
+      <h2>DUEL LOG</h2>
+      <ol id="duel-log"></ol>
+      <div id="sigil-wheel">
+        <h3>THE WHEEL</h3>
+        <div class="wheel-row"><span class="sigil-chip sigil-flame">▲ Flame</span><span class="wheel-beats">beats</span><span class="sigil-chip sigil-gale">✦ Gale</span></div>
+        <div class="wheel-row"><span class="sigil-chip sigil-gale">✦ Gale</span><span class="wheel-beats">beats</span><span class="sigil-chip sigil-stone">◆ Stone</span></div>
+        <div class="wheel-row"><span class="sigil-chip sigil-stone">◆ Stone</span><span class="wheel-beats">beats</span><span class="sigil-chip sigil-tide">● Tide</span></div>
+        <div class="wheel-row"><span class="sigil-chip sigil-tide">● Tide</span><span class="wheel-beats">beats</span><span class="sigil-chip sigil-flame">▲ Flame</span></div>
+        <p class="wheel-note">Advantage +3 power · same sigil +1 each · Attuned sigil +2 · winner deals the difference as damage (min 1).</p>
+      </div>
+    </aside>
+  </main>
+</div>
+
+<div id="title-screen" class="overlay">
+  <div class="overlay-card title-card">
+    <div class="title-sigils" aria-hidden="true"><span class="sigil-glyph sigil-flame">▲</span><span class="sigil-glyph sigil-tide">●</span><span class="sigil-glyph sigil-stone">◆</span><span class="sigil-glyph sigil-gale">✦</span></div>
+    <h1>SIGILBOUND</h1>
+    <p class="tagline">A duel of four sigils. One card each round. Read Vex's hand — and make him regret showing it.</p>
+    <div class="howto">
+      <div><b>1 ·</b> Pick one card from your hand. It costs energy; energy grows every round.</div>
+      <div><b>2 ·</b> Both cards are revealed at once. The sigil wheel, the Attuned sigil and raw power decide the round.</div>
+      <div><b>3 ·</b> The loser takes the difference as damage. First duelist to 0 life falls.</div>
+      <div><b>Keys ·</b> 1–9 select a card · Enter plays it · Esc puts it back · R starts a new duel.</div>
+    </div>
+    <button id="begin-btn" type="button" class="big-btn">BEGIN THE DUEL</button>
+    <p class="title-foot">20 life each · 30-card decks · Vex plays face-up</p>
+  </div>
+</div>
+
+<div id="end-screen" class="overlay hidden">
+  <div class="overlay-card end-card">
+    <div id="end-sigils" class="title-sigils" aria-hidden="true"></div>
+    <h1 id="end-title">VICTORY</h1>
+    <p id="end-line" class="tagline"></p>
+    <div id="end-stats" class="end-stats"></div>
+    <button id="again-btn" type="button" class="big-btn">DUEL AGAIN</button>
+    <p class="title-foot">Press R for a new duel</p>
+  </div>
+</div>
+
+<div id="floaters" aria-hidden="true"></div>
+<div id="confetti" aria-hidden="true"></div>
+<script type="module" src="src/main.js"></script>
+</body>
+</html>
